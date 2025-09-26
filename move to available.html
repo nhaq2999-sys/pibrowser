@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Unlock — Select Amount Of Your Locked Pi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --purple: rgba(90,23,128,0.95);
+      --purple-85: rgba(90,23,128,0.85);
+      --border-purple: #703d92;
+      --muted: rgba(51,51,51,0.65);
+      --bg: #ffffff;
+      --card-bg: #fff;
+      --accent-blue: #1777ff;
+    }
+    *{box-sizing:border-box;font-family: "Roboto", system-ui, -apple-system, "Segoe UI", Arial; margin:0; padding:0}
+    body{
+      background: var(--bg);
+      color: rgba(29,29,31,0.85);
+      -webkit-font-smoothing:antialiased;
+      padding-bottom:40px;
+    }
+
+    /* Topbar like your unlock page */
+    .topbar{
+      background: var(--purple-85);
+      padding:12px 16px;
+      display:flex; justify-content:center; align-items:center; gap:8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+    .topbar .title{ color:#fff; font-weight:500; font-size:18px; }
+
+    .container{
+      width:90%;
+      max-width:360px;
+      margin:30px auto;
+      text-align:center;
+    }
+
+    .notice {
+      margin-bottom:14px;
+      border-radius:8px;
+      background:#fff6e6;
+      border:1px solid #f0d6a8;
+      padding:12px 14px;
+      color:#5a3f00;
+      font-size:14px;
+      text-align:left;
+    }
+
+    .select-btn {
+      margin: 12px 0 18px;
+      width:100%;
+      background: var(--purple-85);
+      color:#fff;
+      padding:12px;
+      border-radius:12px;
+      border:none;
+      font-weight:600;
+      font-size:15px;
+      cursor:pointer;
+    }
+
+    .card {
+      border:1px solid #eee;
+      border-radius:12px;
+      background:var(--card-bg);
+      padding:18px;
+      text-align:center;
+      box-shadow:0 6px 20px rgba(16,24,40,0.04);
+    }
+
+    .faq {
+      margin:14px 0;
+      text-align:left;
+      border-radius:10px;
+      border:1px solid #f1f1f1;
+      padding:12px;
+      font-size:14px;
+      color:var(--muted);
+    }
+
+    .label-small { font-size:14px; color:var(--muted); margin-bottom:8px; text-align:left; }
+
+    /* Big Pi amount styling */
+    .pi-amount {
+      font-size:52px;
+      font-weight:700;
+      color: var(--purple);
+      margin: 14px 0;
+      display:flex;
+      gap:8px;
+      align-items:center;
+      justify-content:center;
+    }
+    .pi-amount .pi-symbol { font-size:36px; transform: translateY(6px); }
+
+    /* Slider styles to match look */
+    .slider-wrap { padding: 8px 6px 2px; }
+    input[type=range]{
+      -webkit-appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 6px;
+      background: #e6e6e6;
+      outline: none;
+    }
+    /* thumb */
+    input[type=range]::-webkit-slider-thumb{
+      -webkit-appearance:none;
+      appearance:none;
+      width:18px; height:18px;
+      border-radius:50%;
+      background: var(--accent-blue);
+      box-shadow: 0 2px 6px rgba(23,119,255,0.35);
+      border: 3px solid white;
+      margin-top: -6px;
+    }
+    input[type=range]::-moz-range-thumb{
+      width:18px; height:18px; border-radius:50%; background:var(--accent-blue); border:3px solid white;
+    }
+    /* show track fill using background gradient */
+    input[type=range].filled {
+      background: linear-gradient(90deg, var(--accent-blue) 0%, var(--accent-blue) var(--percent), #e6e6e6 var(--percent), #e6e6e6 100%);
+    }
+
+    .minmax-row {
+      display:flex; justify-content:space-between; font-size:13px; color:var(--muted); margin-top:8px;
+    }
+
+    .request-btn {
+      margin-top:18px;
+      width:100%;
+      padding:12px;
+      border-radius:12px;
+      border:none;
+      background: var(--purple-85);
+      color:#fff;
+      font-weight:700;
+      cursor:pointer;
+      font-size:15px;
+    }
+
+    @media (max-width:420px){
+      .pi-amount { font-size:44px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="title">Wallet</div>
+  </div>
+
+  <div class="container">
+    <div class="notice">
+      <strong>You can move your pi to available balance.</strong>
+      <div style="margin-top:6px;font-size:13px;color:var(--muted)">Please select the amount of Pi you want to move.</div>
+    </div>
+
+    <button class="select-btn">SELECT WALLET TO MOVE</button>
+
+    <div class="faq card">
+      <div style="font-weight:600;color:var(--purple);margin-bottom:6px">Why allow move to available balance without fees?</div>
+      <div style="color:var(--muted);font-size:14px">Your 0.01 fees will be deducted from the locked pi so no need to transfer 0.01 pi.</div>
+    </div>
+
+    <div style="height:12px"></div>
+
+    <div class="card" aria-label="select amount card">
+      <div class="label-small">Select the amount of Pi to move (manual)</div>
+
+      <div class="pi-amount">
+        <div class="pi-symbol">π</div>
+        <div id="amountDisplay">10000</div>
+      </div>
+
+      <div class="slider-wrap">
+        <input id="amountRange" type="range" min="1" max="10000" step="1">
+      </div>
+
+      <div class="minmax-row">
+        <div>Minimum: 1 Pi</div>
+        <div id="maxLabel">Maximum: total available pi</div>
+      </div>
+
+      <button id="requestBtn" class="request-btn">REQUEST MOVE</button>
+    </div>
+  </div>
+
+  <script>
+    // ====== Configuration ======
+    // If you want to get lockedBalance dynamically from previous page, replace the value below.
+    // e.g., on redirect: logic.html?locked=300 -> parse URL param and set lockedBalance
+    let lockedBalance = 10000;
+
+    // If you want to read from URL param, uncomment:
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('locked')) {
+      const val = parseInt(params.get('locked'), 10);
+      if (!isNaN(val) && val > 0) lockedBalance = val;
+    }
+
+    // ====== Elements ======
+    const range = document.getElementById('amountRange');
+    const display = document.getElementById('amountDisplay');
+    const maxLabel = document.getElementById('maxLabel');
+    const requestBtn = document.getElementById('requestBtn');
+
+    // initialize range & labels
+    range.max = lockedBalance;
+    range.value = Math.min(lockedBalance, Math.max(1, Math.round(lockedBalance/1))); // start at max or a default
+    display.textContent = range.value;
+    maxLabel.textContent = `Maximum: ${lockedBalance} Pi`;
+
+    // helper to set filled track percent
+    function updateFilled(rangeEl) {
+      const min = parseFloat(rangeEl.min || 0);
+      const max = parseFloat(rangeEl.max || 1);
+      const val = parseFloat(rangeEl.value);
+      const percent = ((val - min) / (max - min)) * 100;
+      // set a CSS variable used by background gradient
+      rangeEl.style.setProperty('--percent', percent + '%');
+      // for cross-browser styling: also apply class for webkit as fallback
+      rangeEl.classList.add('filled');
+    }
+
+    range.addEventListener('input', function(e){
+      const v = Math.round(e.target.value);
+      display.textContent = v;
+      updateFilled(e.target);
+    });
+
+    // initial fill
+    updateFilled(range);
+
+    // REQUEST UNLOCK button behaviour ()
+    requestBtn.addEventListener('click', function() {
+      const amount = Math.round(range.value);
+      // demo action: open confirm dialog
+      if (confirm(`Move To Available Balance Request For ${amount} π ?`)) {
+        // in real app you would call API or redirect
+        alert('Balance move requested — Wait for confirmation.');
+        // optionally redirect or perform action:
+        // window.location.href = 'unlock-confirm.html';
+      }
+    });
+  </script>
+</body>
+</html>
